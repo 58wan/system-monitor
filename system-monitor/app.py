@@ -18,7 +18,6 @@ COUNTER = 0
 def monitor():
     global COUNTER
     data = request.json
-    # print("data", data)
     ip = data['ip']
     hostname = data['hostname']
     cpu = data['cpu']
@@ -33,14 +32,12 @@ def monitor():
         host.hostname = hostname
         host.cpu = cpu
         host.memory = memory
-
         db.session.add(host)
     else:
         host.ip = ip
         host.hostname = hostname
         host.cpu = cpu
         host.memory = memory
-
     db.session.commit()
 
     for _user in users:
@@ -48,27 +45,6 @@ def monitor():
         state = _user['state']
         free_time = _user['free_time']
         login_time = _user['login_time']
-        """
-        user = db.session.query(User).filter(User.host_id == host.id, User.username == username).first()
-        if user is None:
-            print("1111")
-            user = User()
-            user.host_id = host.id
-            user.username = username
-            user.state = state
-            user.free_time = free_time
-            user.login_time = login_time
-            db.session.add(user)
-        else:
-            print("2222")
-            user.host_id = host.id
-            user.username = username
-            user.state = state
-            user.free_time = free_time
-            user.login_time = login_time
-            print(user)
-            db.session.add(user.)
-        """
 
         user = User()
         user.host_id = host.id
@@ -89,7 +65,6 @@ def monitor():
         disk_id = _disk['disk_id']
         status = _disk['status']
         confirmed = _disk['confirmed']
-
         disk = db.session.query(Disk).filter(Disk.host_id == host.id, Disk.device == device).first()
         if disk is None:
             disk = Disk()
@@ -112,12 +87,8 @@ def monitor():
 
 @app.route('/db_disks')
 def get_disk_confirmed():
-    # disk_id = request.form.get("disk_id")
     db_disks: Disk = db.session.query(Disk)
     data = [disk.data() for disk in db_disks]
-    # return response(data=data)
-    # if disk is None:
-    #     return json.dumps(0, ensure_ascii=False)
     return json.dumps(data, ensure_ascii=False)
 
 
@@ -147,7 +118,6 @@ def update_disk_confirmed():
 @app.route('/host')
 def get_host_info():
     hosts = db.session.query(Host).all()
-
     data = []
     for host in hosts:
         data.append(host.data())
@@ -164,12 +134,5 @@ def init_app():
 
 
 if __name__ == '__main__':
-    # os.environ["PG_USER"] = "postgres"
-    # os.environ["PG_PASSWORD"] = "123456"
-    # os.environ["PG_DB"] = "flask"
-    # os.environ["PG_HOST"] = "172.18.77.18"
-    # os.environ["PG_PORT"] = "20211"
-
     init_app()
-
     app.run(host="0.0.0.0", port='5000', debug=True)

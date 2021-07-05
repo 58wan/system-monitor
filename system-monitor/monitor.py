@@ -149,6 +149,3 @@ if __name__ == '__main__':
 
     sleep_time = int(sys.argv[2])
     main()
-
-    # url = ' http://10.0.7.20:5000'
-    # get_disk(url)
