@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/new_css/main.css">
+  <link rel="stylesheet" href="css/jquery-ui.css">
+  <title>硬盘监控</title>
+</head>
+
+<body>
+  <div class="py-web-table">
+    <table cellpadding="0" cellspacing="0" border="0" id="table01">
+      <thead>
+        <tr>
+          <!-- <th class="tabSort-header">
+          <a class="tabSort-header-inner sort-btn" column="name">
+            <p>终端名称<span class="sort"></span></p>
+          </a>
+        </th> -->
+          <th class="tabSort-header">
+            <p>终端名称</p>
+          </th>
+          <th class="tabSort-header">
+            <p>IP地址</p>
+          </th>
+          <th class="tabSort-header">
+            <p>用户名</p>
+          </th>
+          <th class="tabSort-header">
+            <p>状态</p>
+          </th>
+          <th class="tabSort-header">
+            <p>最近登录时间</p>
+          </th>
+        </tr>
+      </thead>
+      <tbody id="safeOpr">
+      </tbody>
+    </table>
+  </div>
+</body>
+<script src="js/jquery.js"></script>
+<script src="js/jquery-ui.js"></script>
+<script>
+  const reqURL = 'http://10.0.7.20:5000'
+  let TIMER = null
+  
+  const View = {
+    initFunc() {
+      this.getInitTable()
+    },
+    getInitTable() {
+      if (TIMER) {
+        window.clearTimeout(TIMER)
+      }
+      $.ajax({
+        url: `${reqURL}/host`,
+        type: 'GET',
+        success(response) {
+          const res = JSON.parse(response)
+          if (res.code === 0) {
+            let htmlString = ''
+            for (const item of res.data) {
+              for (const i of item.users) {
+                htmlString += `
+                  <tr>
+                    <td>${item.hostname}</td>
+                    <td>${item.ip}</td>
+                    <td>${i.username}</td>
+                    <td>${i.state}</td>
+                    <td>${i.login_time}</td>
+                  </tr>
+                `
+              }
+            }
+
+            View.renderHtml(htmlString)
+          }
+        },
+        complete() {
+          TIMER = setTimeout(() => {
+            View.getInitTable()
+          }, 1000);
+        }
+      })
+    },
+    renderHtml(htmlString) {
+      $('#safeOpr').html(htmlString)
+    }
+  }
+
+  View.initFunc()
+</script>
+
+</html>

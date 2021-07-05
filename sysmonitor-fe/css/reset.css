@@ -1,0 +1,10 @@
+body, p, form, input, textarea, ul, li, h1, h2, h3, h4, dl, dt, dd, table, td, th { margin: 0; padding: 0; }
+table, td, th { border-collapse: collapse; }
+ul, li { list-style: none; }
+h1, h2, h3, h4 { font-size: 100%; }
+img { vertical-align: middle; border: 0; }
+a { text-decoration: none; color: #383838; outline: none; }
+a:hover { text-decoration: none; }
+body { background: #f0f1f3 url('img/hd_bg_02.jpg?ver=5.01') repeat-x; font: 12px/1.5 "微软雅黑", Verdana, Geneva, sans-serif; color: #383838; position: relative; }
+.clearfix:after, container:after { content: " "; display: block; height: 0; clear: both; visibility: hidden; }
+.clearfix, container { zoom: 1; }

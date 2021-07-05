@@ -1,0 +1,21 @@
+.py-web-table table { width:100%; overflow:auto; font: 12px/1.5 "微软雅黑", Verdana, Geneva, sans-serif;}
+.py-web-table table th,.py-web-table table td { padding-left:7px; text-align:left;}
+.py-web-table table th { background:url(img/bg_02.gif) repeat-x; border-bottom:1px solid #e5e5e5; border-top:1px solid #d8d8da; font-weight:normal; color:#939393;}
+.py-web-table table th a {cursor: pointer;}
+.py-web-table table th p { background:url(img/line01.gif) no-repeat right 50%; height:19px; line-height:19px;}
+.py-web-table table th p.last { background:none;}
+.py-web-table table th p span ,.py-web-table table td a { background:url(img/icon.png) no-repeat;}
+.py-web-table table th p span { width:7px; margin-left:5px; cursor:pointer;}
+.py-web-table table th p span.sort-top { background-position:0 -87px; height:4px; vertical-align:2px; *vertical-align:6px;_background:url(img/up.gif) no-repeat ;_background-position:center;_zoom:1;}
+.py-web-table table th p span.sort-btm { background-position:-7px -87px; height:4px; vertical-align:2px; *vertical-align:6px;_background:url(img/down.gif) no-repeat ;_background-position:center;_zoom:1;}
+.py-web-table table th p span.sort { background-position:0 -78px; height:9px; *vertical-align:3px;_background:url(img/updown.gif) no-repeat ;_background-position:center; _zoom:1;}
+.py-web-table table td { line-height:31px; border-bottom:0px solid #e5e5e5; color:#383838; white-space:nowrap;}
+.py-web-table table td a { width:14px; height:16px; overflow:hidden; margin-right:12px;}
+.py-web-table table td a.icon01 { background-position:0 -46px;}
+.py-web-table table td a.icon02 { background-position:0 -62px;}
+.py-web-table table td a.name {color:#3979c7; background:none; width:auto; height:auto; overflow:auto;}
+.py-web-table table tr.last td { border:0;}
+
+.handle_btn {display: inline-block; cursor: pointer; margin-right: 20px;}
+.set_btn {background:url(img/btn06.png) no-repeat!important; height: 16px; width: 14px;}
+.cancel_btn {background:url(img/btn07.png) no-repeat!important; height: 16px; width: 14px;}

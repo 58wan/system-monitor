@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/new_css/main.css">
+  <link rel="stylesheet" href="css/jquery-ui.css">
+  <title>硬盘监控</title>
+</head>
+<body>
+  <div class="py-web-table">
+    <table cellpadding="0" cellspacing="0" border="0" id="table01">
+      <thead>
+        <tr>
+          <!-- <th class="tabSort-header">
+            <a class="tabSort-header-inner sort-btn" column="name">
+              <p>终端名称<span class="sort"></span></p>
+            </a>
+          </th> -->
+          <th class="tabSort-header">
+            <p>终端名称</p>
+          </th>
+          <th class="tabSort-header">
+            <p>IP地址</p>
+          </th>
+          <th class="tabSort-header">
+            <p>硬盘地址</p>
+          </th>
+          <th class="tabSort-header">
+            <p>状态</p>
+          </th>
+          <th class="tabSort-header">
+            <p>操作</p>
+          </th>
+        </tr>
+      </thead>
+      <tbody id="safeOpr">
+      </tbody>
+    </table>
+    <div id="audioDialog"></div>
+  </div>
+</body>
+<script src="js/jquery.js"></script>
+<script src="js/jquery-ui.js"></script>
+<script>
+  const reqURL = 'http://10.0.7.20:5000'
+  const audioURL = './assets/6175.wav'
+  const statusObj = {
+    '0': '新增',
+    '1': '正常',
+    '-1': '缺失'
+  }
+
+  let TIMER = null
+  let IS_FIRST_TIMER = true
+
+  const View = {
+    initFunc() {
+      this.getInitTable()
+    },
+    getInitTable() {
+      if (TIMER) {
+        window.clearTimeout(TIMER)
+      }
+      $.ajax({
+        url: `${reqURL}/host`,
+        type: 'GET',
+        success(response) {
+          const res = JSON.parse(response)
+          if (res.code === 0) {
+            let htmlString = ''
+            let _str = ''
+            for (const item of res.data) {
+              for (const i of item.disks) {
+                htmlString += `
+                  <tr>
+                    <td>${item.hostname}</td>
+                    <td>${item.ip}</td>
+                    <td>${i.disk_id}</td>
+                    <td>${statusObj[i.status]}</td>
+                    <td style="display: ${i.status === 1 ? 'none' : 'block'};">
+                      <span title="确认变更" class="handle_btn set_btn" onclick="View.handleFunc('${i.id}', 1)"></span>
+                      <span title="删除记录" class="handle_btn cancel_btn" onclick="View.handleFunc('${i.id}', -1)"></span>
+                    </td>
+                  </tr>
+                `
+                if (i.status !== '1') {
+                  _str += `<p>检测到IP为${item.ip}的用户硬盘设备变更</p>`
+                }
+              }
+            }
+
+            View.warningFunc(_str)
+            View.renderHtml(htmlString)
+          }
+        },
+        complete() {
+          if (TIMER || IS_FIRST_TIMER) {
+            TIMER = setTimeout(() => {
+              View.getInitTable()
+            }, 1000);
+            IS_FIRST_TIMER = false
+          }
+        }
+      })
+    },
+    warningFunc(str) {
+      if (!str) {
+        return
+      }
+
+      const audio = new Audio(audioURL)
+      audio.loop = true
+      audio.play()
+
+      $('#audioDialog')[0].innerHTML = str
+      $('#audioDialog').dialog({
+        close: function () {
+          window.location.reload()
+        }
+      })
+      window.clearTimeout(TIMER)
+      TIMER = null
+    },
+    renderHtml(htmlString) {
+      $('#safeOpr').html(htmlString)
+    },
+    handleFunc(id, confirmed) {
+      const data = { id, confirmed }
+      $.ajax({
+        url: `${reqURL}/disk_confirmed`,
+        type: 'PUT',
+        data: data,
+        success(response) {
+          View.initFunc()
+        }
+      })
+    }
+  }
+
+  View.initFunc()
+</script>
+</html>
